@@ -18,6 +18,7 @@ class DroneRemoteDataSource private constructor(
     private fun addFakeDrones() {
         for (i in 0 until 2) {
             val drone = Drone(
+                "basic $i",
                 "quad",
                 5 + i,
                 if (i % 2 == 0) "kiss" else "beta",

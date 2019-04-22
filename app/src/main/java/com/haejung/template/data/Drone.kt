@@ -7,6 +7,7 @@ import java.util.*
 
 @Entity(tableName = "drones")
 data class Drone @JvmOverloads constructor(
+    @ColumnInfo(name = "name") var name: String = "",
     @ColumnInfo(name = "type") var type: String = "",
     @ColumnInfo(name = "prop_size") var propSize : Int = 5,
     @ColumnInfo(name = "fc") var fc : String = "",

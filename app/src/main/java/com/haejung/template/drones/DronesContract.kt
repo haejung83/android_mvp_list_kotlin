@@ -16,6 +16,10 @@ interface DronesContract {
 
         fun showDroneDetailsUI(droneId: String)
 
+        fun showNoDrones()
+
+        fun showError()
+
     }
 
     interface Presenter : BasePresenter {

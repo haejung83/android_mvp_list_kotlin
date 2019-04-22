@@ -34,7 +34,7 @@ class DronesAdapter : RecyclerView.Adapter<DronesAdapter.ViewHolder>() {
         @SuppressLint("SetTextI18n")
         fun bind(drone: Drone) {
             with(drone) {
-                textDroneName.text = fc
+                textDroneName.text = name
                 textDroneType.text = type
             }
         }
