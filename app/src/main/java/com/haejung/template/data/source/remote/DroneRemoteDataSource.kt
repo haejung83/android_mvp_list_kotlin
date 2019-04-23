@@ -1,74 +1,73 @@
 package com.haejung.template.data.source.remote
 
-import android.os.Handler
+import android.util.Log
 import com.haejung.template.data.Drone
 import com.haejung.template.data.source.DronesDataSource
 import com.haejung.template.util.AppExecutors
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class DroneRemoteDataSource private constructor(
     val appExecutors: AppExecutors
 ) : DronesDataSource {
-
-    private var DRONE_DATA = LinkedHashMap<String, Drone>(5)
-
-    init {
-        addFakeDrones()
-    }
-
-    private fun addFakeDrones() {
-        for (i in 0 until 2) {
-            val drone = Drone(
-                "basic $i",
-                "quad",
-                5 + i,
-                if (i % 2 == 0) "kiss" else "beta",
-                1300 + (i * 100)
-            )
-            DRONE_DATA.put(drone.id, drone)
-        }
-    }
+    private val droneAPI: DroneAPI = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
+        .baseUrl("http://10.0.2.2:8080")
+        .build()
+        .create(DroneAPI::class.java)
 
     override fun getDrones(callback: DronesDataSource.LoadDronesCallback) {
-        val drones = DRONE_DATA.values.toList()
-        Handler().postDelayed({
-            callback.onDronesLoaded(drones)
-        }, FAKE_LATENCY_IN_MILLS)
+        droneAPI.requestListDrones().enqueue(object : Callback<List<Drone>> {
+            override fun onFailure(call: Call<List<Drone>>, t: Throwable) {
+                Log.d("getDrones", "onFailure ${t.message}")
+                callback.onDataNotAvailable()
+            }
+
+            override fun onResponse(call: Call<List<Drone>>, response: Response<List<Drone>>) {
+                Log.d("getDrones", "onResponse ${response.body()}")
+                if(response.isSuccessful && response.body() != null)
+                    callback.onDronesLoaded(response.body()!!)
+            }
+        })
     }
 
     override fun getDrone(id: String, callback: DronesDataSource.GetDroneCallback) {
-        val drone: Drone? = DRONE_DATA[id]
+        droneAPI.requestDrone(id).enqueue(object : Callback<Drone> {
+            override fun onFailure(call: Call<Drone>, t: Throwable) {
+                Log.d("getDrone", "onFailure ${t.message}")
+                callback.onDataNotAvailable()
+            }
 
-        with(Handler()) {
-            if (drone != null)
-                postDelayed({ callback.onDroneLoaded(drone) }, FAKE_LATENCY_IN_MILLS)
-            else
-                postDelayed({ callback.onDataNotAvailable() }, FAKE_LATENCY_IN_MILLS)
-        }
+            override fun onResponse(call: Call<Drone>, response: Response<Drone>) {
+                Log.d("getDrone", "onResponse ${response.body()}")
+                if(response.isSuccessful && response.body() != null)
+                    callback.onDroneLoaded(response.body()!!)
+            }
+        })
+
     }
 
     override fun saveDrone(drone: Drone) {
-        DRONE_DATA.put(drone.id, drone)
     }
 
     override fun refreshDrones() {
-
     }
 
     override fun deleteAllDrones() {
-        DRONE_DATA.clear()
     }
 
     override fun deleteDrone(droneId: String) {
-        DRONE_DATA.remove(droneId)
     }
 
     companion object {
-        private const val FAKE_LATENCY_IN_MILLS = 5000L
-        private var instance : DroneRemoteDataSource? = null
+        private var instance: DroneRemoteDataSource? = null
         private val lock = Any()
 
         @JvmStatic
-        fun getInstance(appExecutors: AppExecutors) : DroneRemoteDataSource {
+        fun getInstance(appExecutors: AppExecutors): DroneRemoteDataSource {
             return synchronized(lock) {
                 instance ?: DroneRemoteDataSource(appExecutors).apply {
                     instance = this

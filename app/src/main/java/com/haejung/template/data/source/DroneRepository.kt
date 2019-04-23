@@ -8,7 +8,7 @@ class DroneRepository(
 ) : DronesDataSource {
 
     val cachedDrones: LinkedHashMap<String, Drone> = LinkedHashMap()
-    var cacheIsDirty = false
+    var cacheIsDirty = true
 
     override fun getDrones(callback: DronesDataSource.LoadDronesCallback) {
         if (cachedDrones.isNotEmpty() && !cacheIsDirty) {
