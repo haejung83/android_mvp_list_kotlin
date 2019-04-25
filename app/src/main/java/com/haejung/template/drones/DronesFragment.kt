@@ -3,18 +3,16 @@ package com.haejung.template.drones
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-
 import com.haejung.template.R
 import com.haejung.template.data.Drone
 import com.haejung.template.util.showSnackBar
-import kotlin.math.log
 
 class DronesFragment : Fragment(), DronesContract.View {
     override lateinit var presenter: DronesContract.Presenter
@@ -43,6 +41,7 @@ class DronesFragment : Fragment(), DronesContract.View {
         view?.showSnackBar("Error", Snackbar.LENGTH_SHORT)
     }
 
+    private lateinit var recyclerView: RecyclerView
     private val dronesAdapter = DronesAdapter()
 
     override fun onCreateView(
@@ -50,10 +49,10 @@ class DronesFragment : Fragment(), DronesContract.View {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val root =  inflater.inflate(R.layout.fragment_drones, container, false)
+        val root = inflater.inflate(R.layout.fragment_drones, container, false)
 
         with(root) {
-            val recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
+            recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
                 adapter = dronesAdapter
                 layoutManager = LinearLayoutManager(context)
             }

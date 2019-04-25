@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">TemplateList</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Item -->
+    <string name="item_no_name">NoName</string>
+    <string name="item_no_type">NoType</string>
+    <string name="item_no_size">NoSize</string>
+    <string name="item_no_fc">NoFC</string>
+
+    <!-- Image Content Description -->
+    <string name="icd_item_image">Represent an image of drone</string>
+
+
 </resources>

@@ -124,14 +124,13 @@ class DroneRepository(
 
     companion object {
         private var instance: DroneRepository? = null
-        private val lock = Any()
 
         @JvmStatic
         fun getInstance(
             droneRemoteDataSource: DronesDataSource,
             droneLocalDataSource: DronesDataSource
         ): DroneRepository {
-            return synchronized(lock) {
+            return instance ?: synchronized(this) {
                 instance ?: DroneRepository(droneRemoteDataSource, droneLocalDataSource).apply {
                     instance = this
                 }

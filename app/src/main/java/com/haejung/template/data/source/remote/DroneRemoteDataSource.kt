@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class DroneRemoteDataSource private constructor(
-    val appExecutors: AppExecutors
+    private val appExecutors: AppExecutors
 ) : DronesDataSource {
     private val droneAPI: DroneAPI = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
@@ -28,8 +28,12 @@ class DroneRemoteDataSource private constructor(
 
             override fun onResponse(call: Call<List<Drone>>, response: Response<List<Drone>>) {
                 Log.d("getDrones", "onResponse ${response.body()}")
-                if(response.isSuccessful && response.body() != null)
-                    callback.onDronesLoaded(response.body()!!)
+                response.body()?.let { list ->
+                    val listAddedHostAddress = list.map {
+                        it.copy(image = "http://10.0.2.2:8080/drones/image/${it.name}")
+                    }
+                    callback.onDronesLoaded(listAddedHostAddress)
+                }
             }
         })
     }
@@ -43,7 +47,7 @@ class DroneRemoteDataSource private constructor(
 
             override fun onResponse(call: Call<Drone>, response: Response<Drone>) {
                 Log.d("getDrone", "onResponse ${response.body()}")
-                if(response.isSuccessful && response.body() != null)
+                if (response.isSuccessful && response.body() != null)
                     callback.onDroneLoaded(response.body()!!)
             }
         })
@@ -64,11 +68,10 @@ class DroneRemoteDataSource private constructor(
 
     companion object {
         private var instance: DroneRemoteDataSource? = null
-        private val lock = Any()
 
         @JvmStatic
         fun getInstance(appExecutors: AppExecutors): DroneRemoteDataSource {
-            return synchronized(lock) {
+            return instance ?: synchronized(this) {
                 instance ?: DroneRemoteDataSource(appExecutors).apply {
                     instance = this
                 }

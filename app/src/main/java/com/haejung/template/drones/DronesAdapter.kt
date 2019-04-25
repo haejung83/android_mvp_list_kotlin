@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.haejung.template.R
 import com.haejung.template.data.Drone
 import com.haejung.template.util.inflate
@@ -36,6 +37,10 @@ class DronesAdapter : RecyclerView.Adapter<DronesAdapter.ViewHolder>() {
             with(drone) {
                 textDroneName.text = name
                 textDroneType.text = type
+                image?.also {
+                    Glide.with(view).load(it).into(imageDrone)
+                    Glide.with(view).load(it).into(imageThumbnail)
+                }
             }
         }
     }

@@ -12,22 +12,19 @@ abstract class DroneDatabase : RoomDatabase() {
     abstract fun droneDao(): DroneDao
 
     companion object {
+        private var instance: DroneDatabase? = null
 
-        private var instance : DroneDatabase? = null
-
-        private val lock = Any()
-
-        fun getInstance(context : Context): DroneDatabase {
-            synchronized(lock) {
-                if(instance == null) {
-                   instance = Room.databaseBuilder(
-                       context.applicationContext,
-                       DroneDatabase::class.java, "Drones.db")
-                       .build()
+        fun getInstance(context: Context): DroneDatabase {
+            return instance ?: synchronized(this) {
+                instance ?: Room.databaseBuilder(
+                    context.applicationContext,
+                    DroneDatabase::class.java,
+                    "Drones.db"
+                ).build().apply {
+                    instance = this
                 }
-                return instance!!
             }
         }
-
     }
+
 }
