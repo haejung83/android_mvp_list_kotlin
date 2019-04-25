@@ -28,7 +28,7 @@ class DronesAdapter : RecyclerView.Adapter<DronesAdapter.ViewHolder>() {
         holder.bind(items[position])
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view), LayoutContainer {
+    class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view), LayoutContainer {
         override val containerView: View?
             get() = view
 
@@ -37,7 +37,7 @@ class DronesAdapter : RecyclerView.Adapter<DronesAdapter.ViewHolder>() {
             with(drone) {
                 textDroneName.text = name
                 textDroneType.text = type
-                image?.also {
+                image.also {
                     Glide.with(view).load(it).into(imageDrone)
                     Glide.with(view).load(it).into(imageThumbnail)
                 }

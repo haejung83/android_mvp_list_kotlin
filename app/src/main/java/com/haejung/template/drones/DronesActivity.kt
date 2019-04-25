@@ -22,6 +22,6 @@ class DronesActivity : AppCompatActivity() {
 
         // Create Presenter (Presenter)
         dronesPresenter = DronesPresenter(injectRepository(applicationContext), dronesFragment)
-
     }
+
 }
