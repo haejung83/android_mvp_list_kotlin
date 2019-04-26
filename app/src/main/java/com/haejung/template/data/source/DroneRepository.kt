@@ -3,8 +3,8 @@ package com.haejung.template.data.source
 import com.haejung.template.data.Drone
 
 class DroneRepository(
-    val droneRemoteDataSource: DronesDataSource,
-    val droneLocalDataSource: DronesDataSource
+    private val droneRemoteDataSource: DronesDataSource,
+    private val droneLocalDataSource: DronesDataSource
 ) : DronesDataSource {
 
     val cachedDrones: LinkedHashMap<String, Drone> = LinkedHashMap()
@@ -61,15 +61,15 @@ class DroneRepository(
         }
     }
 
-    override fun getDrone(id: String, callback: DronesDataSource.GetDroneCallback) {
-        val cached = cachedDrones[id]
+    override fun getDrone(name: String, callback: DronesDataSource.GetDroneCallback) {
+        val cached = cachedDrones[name]
 
         if (cached != null) {
             callback.onDroneLoaded(cached)
             return
         }
 
-        droneLocalDataSource.getDrone(id, object : DronesDataSource.GetDroneCallback {
+        droneLocalDataSource.getDrone(name, object : DronesDataSource.GetDroneCallback {
             override fun onDroneLoaded(drone: Drone) {
                 cacheAndPerform(drone) {
                     callback.onDroneLoaded(it)
@@ -77,7 +77,7 @@ class DroneRepository(
             }
 
             override fun onDataNotAvailable() {
-                droneRemoteDataSource.getDrone(id, object : DronesDataSource.GetDroneCallback {
+                droneRemoteDataSource.getDrone(name, object : DronesDataSource.GetDroneCallback {
                     override fun onDroneLoaded(drone: Drone) {
                         cacheAndPerform(drone) {
                             callback.onDroneLoaded(it)
@@ -110,15 +110,15 @@ class DroneRepository(
         cachedDrones.clear()
     }
 
-    override fun deleteDrone(droneId: String) {
-        droneRemoteDataSource.deleteDrone(droneId)
-        droneLocalDataSource.deleteDrone(droneId)
-        cachedDrones.remove(droneId)
+    override fun deleteDrone(name: String) {
+        droneRemoteDataSource.deleteDrone(name)
+        droneLocalDataSource.deleteDrone(name)
+        cachedDrones.remove(name)
     }
 
     private inline fun cacheAndPerform(drone: Drone, perform: (Drone) -> Unit) {
         val cached = drone.copy()
-        cachedDrones.put(cached.id, cached)
+        cachedDrones[cached.name] = cached
         perform(cached)
     }
 

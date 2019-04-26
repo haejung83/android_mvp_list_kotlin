@@ -16,7 +16,7 @@ interface DronesDataSource {
 
     fun getDrones(callback: LoadDronesCallback)
 
-    fun getDrone(id: String, callback: GetDroneCallback)
+    fun getDrone(name: String, callback: GetDroneCallback)
 
     fun saveDrone(drone: Drone)
 
@@ -24,5 +24,5 @@ interface DronesDataSource {
 
     fun deleteAllDrones()
 
-    fun deleteDrone(droneId: String)
+    fun deleteDrone(name: String)
 }

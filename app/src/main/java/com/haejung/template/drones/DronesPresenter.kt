@@ -5,8 +5,8 @@ import com.haejung.template.data.source.DroneRepository
 import com.haejung.template.data.source.DronesDataSource
 
 class DronesPresenter(
-    val dronesRepository: DroneRepository,
-    val dronesView: DronesContract.View
+    private val dronesRepository: DroneRepository,
+    private val dronesView: DronesContract.View
 ) : DronesContract.Presenter {
 
     init {
@@ -29,11 +29,13 @@ class DronesPresenter(
     }
 
     override fun result(requestCode: Int, resultCode: Int) {
-
     }
 
     override fun loadDrones(force: Boolean) {
+    }
 
+    override fun openDroneDetails(requestedDrone: Drone) {
+        dronesView.showDroneDetailsUI(requestedDrone.name)
     }
 
 }

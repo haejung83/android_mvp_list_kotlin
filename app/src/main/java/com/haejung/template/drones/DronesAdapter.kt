@@ -14,12 +14,13 @@ import kotlinx.android.synthetic.main.view_drone_item.*
 import kotlin.properties.Delegates
 
 
-class DronesAdapter : RecyclerView.Adapter<DronesAdapter.ViewHolder>() {
+class DronesAdapter(private val listener: DronesFragment.DroneItemListener) :
+    RecyclerView.Adapter<DronesAdapter.ViewHolder>() {
 
     var items: List<Drone> by Delegates.observable(emptyList()) { _, _, _ -> notifyDataSetChanged() }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(parent.inflate(R.layout.view_drone_item))
+        return ViewHolder(parent.inflate(R.layout.view_drone_item), listener)
     }
 
     override fun getItemCount(): Int = items.size
@@ -28,18 +29,25 @@ class DronesAdapter : RecyclerView.Adapter<DronesAdapter.ViewHolder>() {
         holder.bind(items[position])
     }
 
-    class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view), LayoutContainer {
+    class ViewHolder(private val view: View, private val listener: DronesFragment.DroneItemListener) :
+        RecyclerView.ViewHolder(view), LayoutContainer {
         override val containerView: View?
             get() = view
 
+        private var droneItem: Drone? = null
+
         @SuppressLint("SetTextI18n")
         fun bind(drone: Drone) {
-            with(drone) {
+            droneItem = drone
+            droneItem?.apply {
                 textDroneName.text = name
                 textDroneType.text = type
                 image.also {
                     Glide.with(view).load(it).into(imageDrone)
                     Glide.with(view).load(it).into(imageThumbnail)
+                }
+                view.setOnClickListener {
+                    listener.onDroneClick(this)
                 }
             }
         }

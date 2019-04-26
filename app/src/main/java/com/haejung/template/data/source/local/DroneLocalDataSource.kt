@@ -21,15 +21,14 @@ class DroneLocalDataSource private constructor(
         }
     }
 
-    override fun getDrone(id: String, callback: DronesDataSource.GetDroneCallback) {
+    override fun getDrone(name: String, callback: DronesDataSource.GetDroneCallback) {
         appExecutor.diskIO.execute {
-            val drone: Drone? = droneDao.findById(id)
+            val drones: List<Drone> = droneDao.findByName(name)
             appExecutor.mainThread.execute {
-                if (drone != null) {
-                    callback.onDroneLoaded(drone)
-                } else {
+                if (drones.isNotEmpty())
+                    callback.onDroneLoaded(drones[0])
+                else
                     callback.onDataNotAvailable()
-                }
             }
         }
     }
@@ -41,7 +40,7 @@ class DroneLocalDataSource private constructor(
     }
 
     override fun refreshDrones() {
-        // Nothing to do
+        TODO("Not implemented yet")
     }
 
     override fun deleteAllDrones() {
@@ -50,9 +49,9 @@ class DroneLocalDataSource private constructor(
         }
     }
 
-    override fun deleteDrone(droneId: String) {
+    override fun deleteDrone(name: String) {
         appExecutor.diskIO.execute {
-            droneDao.deleteById(droneId)
+            droneDao.deleteByName(name)
         }
     }
 

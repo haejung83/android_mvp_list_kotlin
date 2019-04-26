@@ -11,7 +11,7 @@ fun injectRepository(context: Context) : DroneRepository {
     val db = DroneDatabase.getInstance(context)
     val appExecutors = AppExecutors()
     return DroneRepository.getInstance(
-        DroneRemoteDataSource.getInstance(appExecutors),
+        DroneRemoteDataSource.getInstance(),
         DroneLocalDataSource.getInstance(appExecutors, db.droneDao())
     )
 }

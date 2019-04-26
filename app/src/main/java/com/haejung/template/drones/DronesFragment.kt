@@ -1,26 +1,32 @@
 package com.haejung.template.drones
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.haejung.template.R
 import com.haejung.template.data.Drone
+import com.haejung.template.details.DetailsActivity
 import com.haejung.template.util.showSnackBar
 import com.orhanobut.logger.Logger
+import kotlinx.android.synthetic.main.fragment_drones.*
 
 class DronesFragment : Fragment(), DronesContract.View {
     override lateinit var presenter: DronesContract.Presenter
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var textEmptyResult: TextView
-    private val dronesAdapter = DronesAdapter()
+    private var droneItemListener: DroneItemListener = object : DroneItemListener {
+        override fun onDroneClick(clickedDrone: Drone) {
+            presenter.openDroneDetails(clickedDrone)
+        }
+    }
+
+    private val dronesAdapter = DronesAdapter(droneItemListener)
 
     override var isActive: Boolean = false
         get() = isAdded
@@ -32,14 +38,18 @@ class DronesFragment : Fragment(), DronesContract.View {
     override fun showDrones(drones: List<Drone>) {
         Logger.d("showDrones: ${drones.size}")
         dronesAdapter.items = drones
-        if (recyclerView.visibility == View.GONE) {
-            recyclerView.visibility = View.VISIBLE
-            textEmptyResult.visibility = View.GONE
+        if (recycler_view.visibility == View.GONE) {
+            recycler_view.visibility = View.VISIBLE
+            textEmtpyResult.visibility = View.GONE
         }
     }
 
-    override fun showDroneDetailsUI(droneId: String) {
-        Logger.d("showDroneDetailsUI: $droneId")
+    override fun showDroneDetailsUI(droneName: String) {
+        Logger.d("showDroneDetailsUI: $droneName")
+        val intent = Intent(context, DetailsActivity::class.java).apply {
+            putExtra(DetailsActivity.EXTRA_DRONE_NAME, droneName)
+        }
+        startActivity(intent)
     }
 
     override fun showNoDrones() {
@@ -53,11 +63,11 @@ class DronesFragment : Fragment(), DronesContract.View {
     }
 
     private fun showEmptyResult(msg: String) {
-        if (recyclerView.visibility != View.GONE) {
-            recyclerView.visibility = View.GONE
-            textEmptyResult.visibility = View.VISIBLE
+        if (recycler_view.visibility != View.GONE) {
+            recycler_view.visibility = View.GONE
+            textEmtpyResult.visibility = View.VISIBLE
         }
-        textEmptyResult.text = msg
+        textEmtpyResult.text = msg
     }
 
     override fun onCreateView(
@@ -66,17 +76,20 @@ class DronesFragment : Fragment(), DronesContract.View {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_drones, container, false).apply {
-            recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
+            findViewById<RecyclerView>(R.id.recycler_view).apply {
                 adapter = dronesAdapter
                 layoutManager = LinearLayoutManager(context)
             }
-            textEmptyResult = findViewById<TextView>(R.id.textEmtpyResult);
         }
     }
 
     override fun onResume() {
         super.onResume()
         presenter.start()
+    }
+
+    interface DroneItemListener {
+        fun onDroneClick(clickedDrone: Drone)
     }
 
     companion object {
