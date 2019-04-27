@@ -55,7 +55,7 @@ class DroneRepository(
     }
 
     private fun refreshLocalDataSource(drones: List<Drone>) {
-        droneLocalDataSource.deleteAllDrones();
+        droneLocalDataSource.deleteAllDrones()
         drones.forEach {
             droneLocalDataSource.saveDrone(it)
         }

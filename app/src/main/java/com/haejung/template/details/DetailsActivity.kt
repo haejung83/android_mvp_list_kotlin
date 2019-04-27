@@ -8,6 +8,8 @@ import com.haejung.template.util.replaceFragmentInActivity
 
 class DetailsActivity : AppCompatActivity() {
 
+    private lateinit var detailsPresenter: DetailsPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
@@ -22,11 +24,12 @@ class DetailsActivity : AppCompatActivity() {
         val droneName = intent.getStringExtra(EXTRA_DRONE_NAME)
 
         // Create Presenter
-        DetailsPresenter(droneName, injectRepository(applicationContext), detailsFragment)
+        detailsPresenter = DetailsPresenter(droneName, injectRepository(applicationContext), detailsFragment)
     }
 
 
     companion object {
         const val EXTRA_DRONE_NAME = "drone_name"
     }
+
 }

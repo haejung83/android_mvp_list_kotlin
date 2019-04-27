@@ -8,7 +8,7 @@ interface DronesContract {
 
     interface View : BaseView<Presenter> {
 
-        var isActive : Boolean
+        var isActive: Boolean
 
         fun setLoadingIndicator(active: Boolean)
 
@@ -25,10 +25,6 @@ interface DronesContract {
     interface Presenter : BasePresenter {
 
         fun result(requestCode: Int, resultCode: Int)
-
-        fun loadDrones(force: Boolean)
-
-//        fun addNewDrone()
 
         fun openDroneDetails(requestedDrone: Drone)
 

@@ -20,6 +20,9 @@ import kotlinx.android.synthetic.main.fragment_drones.*
 class DronesFragment : Fragment(), DronesContract.View {
     override lateinit var presenter: DronesContract.Presenter
 
+    override var isActive: Boolean = false
+        get() = isAdded
+
     private var droneItemListener: DroneItemListener = object : DroneItemListener {
         override fun onDroneClick(clickedDrone: Drone) {
             presenter.openDroneDetails(clickedDrone)
@@ -27,9 +30,6 @@ class DronesFragment : Fragment(), DronesContract.View {
     }
 
     private val dronesAdapter = DronesAdapter(droneItemListener)
-
-    override var isActive: Boolean = false
-        get() = isAdded
 
     override fun setLoadingIndicator(active: Boolean) {
         Logger.d("setLoadingIndicator: $active")

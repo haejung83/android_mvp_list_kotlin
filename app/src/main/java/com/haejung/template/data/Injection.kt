@@ -7,7 +7,7 @@ import com.haejung.template.data.source.local.DroneLocalDataSource
 import com.haejung.template.data.source.remote.DroneRemoteDataSource
 import com.haejung.template.util.AppExecutors
 
-fun injectRepository(context: Context) : DroneRepository {
+fun injectRepository(context: Context): DroneRepository {
     val db = DroneDatabase.getInstance(context)
     val appExecutors = AppExecutors()
     return DroneRepository.getInstance(

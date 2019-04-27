@@ -14,24 +14,29 @@ class DronesPresenter(
     }
 
     override fun start() {
-        // Get drones from DroneRepository
-        // And then set data to view
+        dronesView.setLoadingIndicator(true)
+        // Get drones from DroneRepository And then set data to view
         dronesRepository.getDrones(object : DronesDataSource.LoadDronesCallback {
             override fun onDronesLoaded(drones: List<Drone>) {
+                if (!dronesView.isActive)
+                    return
+
+                dronesView.setLoadingIndicator(false)
                 dronesView.showDrones(drones)
             }
 
             override fun onDataNotAvailable() {
+                if (!dronesView.isActive)
+                    return
+
+                dronesView.setLoadingIndicator(false)
                 dronesView.showError()
             }
-
         })
     }
 
     override fun result(requestCode: Int, resultCode: Int) {
-    }
-
-    override fun loadDrones(force: Boolean) {
+        TODO("Not implemented yet")
     }
 
     override fun openDroneDetails(requestedDrone: Drone) {

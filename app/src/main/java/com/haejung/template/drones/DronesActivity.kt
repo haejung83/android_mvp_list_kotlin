@@ -1,7 +1,7 @@
 package com.haejung.template.drones
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.haejung.template.R
 import com.haejung.template.data.injectRepository
 import com.haejung.template.util.replaceFragmentInActivity

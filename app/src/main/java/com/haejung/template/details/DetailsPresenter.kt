@@ -15,12 +15,22 @@ class DetailsPresenter(
     }
 
     override fun start() {
+        detailsView.setLoadingIndicator(true)
+
         dronesRepository.getDrone(droneName, object : DronesDataSource.GetDroneCallback {
             override fun onDroneLoaded(drone: Drone) {
+                if (!detailsView.isActive)
+                    return
+
+                detailsView.setLoadingIndicator(false)
                 detailsView.showDroneDetails(drone)
             }
 
             override fun onDataNotAvailable() {
+                if (!detailsView.isActive)
+                    return
+
+                detailsView.setLoadingIndicator(false)
                 detailsView.showError()
             }
 
@@ -28,6 +38,7 @@ class DetailsPresenter(
     }
 
     override fun result(requestCode: Int, resultCode: Int) {
+        TODO("Not implemented yet")
     }
 
 }

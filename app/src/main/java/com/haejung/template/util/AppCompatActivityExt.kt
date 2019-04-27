@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 
 fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int) {
-    supportFragmentManager.transact{
+    supportFragmentManager.transact {
         replace(frameId, fragment)
     }
     // supportFragmentManager.beginTransaction().replace(frameId, fragment).commit()
@@ -28,7 +28,7 @@ fun AppCompatActivity.setupActionBar(@IdRes toobarId: Int, action: ActionBar.() 
 }
 
 private inline fun FragmentManager.transact(action: FragmentTransaction.() -> Unit) {
-    beginTransaction().apply{
+    beginTransaction().apply {
         action()
     }.commit()
 

@@ -8,9 +8,9 @@ import retrofit2.http.Path
 interface DroneAPI {
 
     @GET("/drones")
-    fun requestListDrones() : Call<List<Drone>>
+    fun requestListDrones(): Call<List<Drone>>
 
     @GET("/drone/{name}")
-    fun requestDrone(@Path("name") name: String) : Call<Drone>
+    fun requestDrone(@Path("name") name: String): Call<Drone>
 
 }

@@ -5,8 +5,8 @@
     <string name="frag_no_results">No results</string>
 
     <!-- DetailsFragment -->
-    <string name="frag_details_title_name">Name</string>
-    <string name="frag_details_title_type">Type</string>
+    <string name="frag_details_title_name">Name:</string>
+    <string name="frag_details_title_type">Type:</string>
     <string name="frag_details_title_fc">Flight Controller:</string>
     <string name="frag_details_title_size">Prop Size:</string>
     <string name="frag_details_value_empty">Unknown</string>
