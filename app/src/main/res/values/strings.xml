@@ -20,4 +20,8 @@
     <!-- Image Content Description -->
     <string name="icd_item_image">Represent an image of drone</string>
 
+    <!-- SnackBar Messages -->
+    <string name="msg_no_drones">No Drones</string>
+    <string name="msg_error">Error</string>
+
 </resources>

@@ -40,7 +40,7 @@ class DronesFragment : Fragment(), DronesContract.View {
         dronesAdapter.items = drones
         if (recycler_view.visibility == View.GONE) {
             recycler_view.visibility = View.VISIBLE
-            textEmtpyResult.visibility = View.GONE
+            textResultExtraMessage.visibility = View.GONE
         }
     }
 
@@ -53,21 +53,20 @@ class DronesFragment : Fragment(), DronesContract.View {
     }
 
     override fun showNoDrones() {
-        view?.showSnackBar("No Drones", Snackbar.LENGTH_SHORT)
-        showEmptyResult("No Drones")
+        view?.showSnackBar(getString(R.string.msg_no_drones), Snackbar.LENGTH_SHORT)
+        showEmptyResult()
     }
 
     override fun showError() {
-        view?.showSnackBar("Error", Snackbar.LENGTH_SHORT)
-        showEmptyResult("Error")
+        view?.showSnackBar(getString(R.string.msg_error), Snackbar.LENGTH_SHORT)
+        showEmptyResult()
     }
 
-    private fun showEmptyResult(msg: String) {
+    private fun showEmptyResult() {
         if (recycler_view.visibility != View.GONE) {
             recycler_view.visibility = View.GONE
-            textEmtpyResult.visibility = View.VISIBLE
+            textResultExtraMessage.visibility = View.VISIBLE
         }
-        textEmtpyResult.text = msg
     }
 
     override fun onCreateView(

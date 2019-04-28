@@ -27,7 +27,6 @@ class DetailsActivity : AppCompatActivity() {
         detailsPresenter = DetailsPresenter(droneName, injectRepository(applicationContext), detailsFragment)
     }
 
-
     companion object {
         const val EXTRA_DRONE_NAME = "drone_name"
     }

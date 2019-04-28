@@ -22,7 +22,10 @@ class DronesPresenter(
                     return
 
                 dronesView.setLoadingIndicator(false)
-                dronesView.showDrones(drones)
+                if (drones.isNotEmpty())
+                    dronesView.showDrones(drones)
+                else
+                    dronesView.showNoDrones()
             }
 
             override fun onDataNotAvailable() {
