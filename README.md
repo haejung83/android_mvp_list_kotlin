@@ -7,6 +7,10 @@
 
   * Android MVP Pattern
   * Kotlin
+  * RxJava
+    * RxAndroid
+    * RxJava Retrofit adapter
+    * RxJava Room adapter
 
   
 
@@ -46,22 +50,12 @@
 
       ```kotlin
       interface DronesDataSource {
-          interface LoadDronesCallback {
-              fun onDronesLoaded(drones: List<Drone>)
-              fun onDataNotAvailable()
-          }
-          
-          interface GetDroneCallback {
-              fun onDroneLoaded(drone: Drone)
-              fun onDataNotAvailable()
-          }
-          
-          fun getDrones(callback: LoadDronesCallback)
-          fun getDrone(name: String, callback: GetDroneCallback)
-          fun saveDrone(drone: Drone)
-          fun refreshDrones()
-          fun deleteAllDrones()
-          fun deleteDrone(name: String)
+          fun getDrones(): Flowable<List<Drone>>
+          fun getDrone(name: String): Flowable<Optional<Drone>>
+          fun saveDrone(drone: Drone): Completable
+          fun refreshDrones(): Completable
+          fun deleteAllDrones(): Single<Int>
+          fun deleteDrone(name: String): Single<Int>
       }
       ```
 
@@ -98,7 +92,8 @@
         ```kotlin
         // Super simple presenter
         interface BasePresenter {
-            fun start()
+            fun subscribe()
+            fun unsubscribe()
         }
         ```
 
