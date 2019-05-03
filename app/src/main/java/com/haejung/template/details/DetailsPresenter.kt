@@ -1,8 +1,10 @@
 package com.haejung.template.details
 
-import com.haejung.template.data.Drone
+import android.util.Log
 import com.haejung.template.data.source.DroneRepository
-import com.haejung.template.data.source.DronesDataSource
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 class DetailsPresenter(
     private val droneName: String,
@@ -14,31 +16,45 @@ class DetailsPresenter(
         detailsView.presenter = this
     }
 
-    override fun start() {
+    private val disposable by lazy {
+        CompositeDisposable()
+    }
+
+    override fun subscribe() {
         detailsView.setLoadingIndicator(true)
 
-        dronesRepository.getDrone(droneName, object : DronesDataSource.GetDroneCallback {
-            override fun onDroneLoaded(drone: Drone) {
-                if (!detailsView.isActive)
-                    return
+        disposable.add(
+            dronesRepository
+                .getDrone(droneName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Log.d(TAG, "subscribe")
+                    if (!detailsView.isActive || !it.isPresent)
+                        return@subscribe
 
-                detailsView.setLoadingIndicator(false)
-                detailsView.showDroneDetails(drone)
-            }
+                    detailsView.setLoadingIndicator(false)
+                    detailsView.showDroneDetails(it.get())
+                }, {
+                    Log.e(TAG, "subscribe: $it")
+                    if (!detailsView.isActive)
+                        return@subscribe
 
-            override fun onDataNotAvailable() {
-                if (!detailsView.isActive)
-                    return
+                    detailsView.setLoadingIndicator(false)
+                    detailsView.showError()
+                })
+        )
+    }
 
-                detailsView.setLoadingIndicator(false)
-                detailsView.showError()
-            }
-
-        })
+    override fun unsubscribe() {
+        disposable.clear()
     }
 
     override fun result(requestCode: Int, resultCode: Int) {
         TODO("Not implemented yet")
     }
 
+    companion object {
+        private val TAG: String = DetailsPresenter::class.java.simpleName
+    }
 }
