@@ -1,6 +1,8 @@
 # [List] Android MVP Pattern
 > 간단한 MVP 패턴을 사용한 List 화면 Android 예제 입니다.
 
+* RxJava Version
+  * [Branch](https://github.com/haejung83/android_mvp_list_kotlin/tree/mvp_rxjava)
 
 
 * 사용기술
